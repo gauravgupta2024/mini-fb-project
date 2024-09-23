@@ -1,0 +1,32 @@
+# Friends Management
+    Add Friend:
+
+        Endpoint: /api/v1/friends/add
+        Method: POST
+        Description: Allows users to send a friend request to another user.
+    
+    Remove Friend:
+        Endpoint: /api/v1/friends/remove
+        Method: PUT
+        Description: Allows users to remove someone from their friends list.
+
+# Interactions
+    Like Post:
+        Endpoint: /api/v1/posts/like/:postId
+        Method: POST
+        Description: Allows users to like a post. Odd-numbered requests increment likes, even-numbered requests decrement likes.
+    
+    Create Comment:
+        Endpoint: /api/v1/posts/comments/:postId
+        Method: POST
+        Description: Allows users to comment on a post.
+
+    Update Comment:
+        Endpoint: /api/v1/posts/comments/:postId
+        Method: PUT
+        Description: Allows users to update their own comment.
+    
+    Delete Comment:
+        Endpoint: /api/v1/posts/comments/:postId
+        Method: DELETE
+        Description: Allows users to delete their own comment.

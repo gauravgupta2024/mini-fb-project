@@ -1,0 +1,16 @@
+# Basic auth
+    Register:
+        Endpoint: /api/auth/register
+        Method: POST
+        Description: validates user details -> create user -> generates token -> save token
+    
+    Login:
+        Endpoint: /api/auth/login
+        Method: POST
+        Description: validates user details -> check for existing user -> generates token -> save token
+    
+    Logout:
+        Endpoint: /api/auth/logout
+        Method: POST
+        Description: check for saved token -> deletes token.
+ 

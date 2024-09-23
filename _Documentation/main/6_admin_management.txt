@@ -1,0 +1,24 @@
+# admin users management
+    Get All Users:
+        Endpoint: /api/v1/admin/users
+        Method: GET
+        Description: Allows admins to retrieve a list of all users.
+
+    Update User Role:
+        Endpoint: /api/v1/admin/users
+        Method: PUT
+        Description: Allows admins to update the role of any user (e.g., promote to admin). Notifies the user of the role change.
+                        - Role options: 
+                            - `user`: Default role for regular users.
+                            - `admin`: Can manage users and content.
+
+    Ban User Account:
+        Endpoint: /api/v1/admin/users/:userId/ban
+        Method: POST
+        Description: Allows admins to ban a user account. Notifies the user of the ban.
+
+# admin posts management
+    Delete Other Users' Posts:
+        Endpoint: /api/v1/admin/posts/:postId
+        Method: DELETE
+        Description: Allows admins to delete posts created by other users. Notifies the post creator.

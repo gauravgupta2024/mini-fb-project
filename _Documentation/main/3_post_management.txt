@@ -1,0 +1,27 @@
+# Post Management
+        Create Post only text:
+            Endpoint: /api/v1/posts/text
+            Method: POST
+            Description: Allows users to create a new post (text-based).
+
+        Create Post only images:
+                    Endpoint: /api/v1/posts/images
+                    Method: POST
+                    Description: Allows users to create a new post (photo-based).
+
+        Create Post only videos:
+                    Endpoint: /api/v1/posts/videos
+                    Method: POST
+                    Description: Allows users to create a new post (video-based).
+
+        Update Post:
+            Endpoint: /api/v1/posts/:postId
+            Method: PUT
+            Description: Allows users to update their own post, including:
+                            -Changing post text, photo, or video.
+
+        Delete Post:
+            Endpoint: /api/v1/posts/:postId
+            Method: DELETE
+            Description: Allows users to delete their own post.
+                         also deletes comments created on post.

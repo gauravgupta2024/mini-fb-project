@@ -1,0 +1,20 @@
+# User Management   
+        Load User Profile:
+            Endpoint: /api/v1/me
+            Method: GET
+            Description: Loads the profile of a user and posts of user.
+        
+        Update Profile:
+            Endpoint: /api/v1/me/update
+            Method: PUT
+            Description: Allows a user to update their profile, including:
+                            - Changing or adding a profile picture (avatar).
+                            - Changing user username
+                            - Changing user email
+                            - Changing user originalname
+                        
+        Update Password:
+            Endpoint: /api/me/update/password
+            Method: PUT
+            Description: Allows users to update their password.
+

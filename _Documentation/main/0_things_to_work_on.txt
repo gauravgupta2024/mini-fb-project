@@ -1,0 +1,18 @@
+1. basic authentication 
+2. user management
+3. posts management
+4. search functionality
+5. friends management
+6. admin management
+
+
+-------------------------------
+#TECH STACK
+    # frontend
+        Next.js + typescript
+
+    # backend
+        Nest.js + typescript
+
+    # documentation 
+        google docs + swagger UI

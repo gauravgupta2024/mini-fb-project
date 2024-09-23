@@ -1,0 +1,20 @@
+# Search Funtionalities 
+        Search Users:
+            Endpoint: /api/v1/v1/search/users
+            Method: GET
+            Description: Search for users by name.
+        
+        Search Posts:
+            Endpoint: /api/v1/search/posts
+            Method: GET
+            Description: Search for posts by caption text.
+        
+        Get Universal Feed:
+            Endpoint: /api/v1/feed
+            Method: GET
+            Description: Retrieves a universal feed of posts, sorted by the latest.
+
+        Get Personal Feed:        
+            Endpoint: /api/v1/me/feed
+            Method: GET
+            Description: Retrieves a personal feed of posts, sorted by the latest => friend's posts.
