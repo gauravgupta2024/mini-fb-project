@@ -25,5 +25,6 @@ import { PostdataService } from './postdata.service';
   ],
   controllers: [PostdataController],
   providers: [PostdataService],
+  exports: [MongooseModule],
 })
 export class PostdataModule {}

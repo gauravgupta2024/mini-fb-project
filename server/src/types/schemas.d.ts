@@ -10,13 +10,21 @@ export interface UserDocumentType extends Document {
   username: string;
   avatar: avatarObjType;
   posts: mongoose.Types.ObjectId[];
+  comments_added: mongoose.Types.ObjectId[];
+  friends: mongoose.Types.ObjectId[];
+
   getJWTtoken(): string; // Custom method to generate JWT token
   comparePass(enteredPass: string): Promise<boolean>; // Custom method to compare passwords
 }
 
 export interface PostDataDocumentType extends Document {
-  captionText: string;
+  postCaption: string;
   contentType: string;
-  postUploads: PostDataUploadObjType[];
-  isDeleted: boolean;
+  postDataUploads: PostDataUploadObjType[];
+  comments: mongoose.Types.ObjectId[];
+}
+
+export interface CommentDocumentType extends Document {
+  user_id: mongoose.Types.ObjectId;
+  comment_text: string;
 }

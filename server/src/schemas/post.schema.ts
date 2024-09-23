@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 import {
   PostDataUploadObj,
@@ -11,7 +11,7 @@ export class PostData extends Document {
   @Prop({
     required: [true, 'Please provide post caption'],
   })
-  textCaption: string;
+  postCaption: string;
 
   @Prop({
     required: [true, 'Please provide post content type'],
@@ -23,8 +23,8 @@ export class PostData extends Document {
   @Prop({ type: [PostDataUploadObjSchema] })
   postDataUploads: PostDataUploadObj[];
 
-  @Prop({ required: true, default: false })
-  isDeleted: boolean;
+  @Prop({ type: [mongoose.Types.ObjectId], ref: 'comments' })
+  comments: mongoose.Types.ObjectId[];
 }
 
 export const PostDataSchema = SchemaFactory.createForClass(PostData);
