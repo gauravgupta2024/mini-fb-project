@@ -20,7 +20,7 @@ const NavBar = () => {
         <Link href="/login" className="mr-3 colored-btn-link px-4 py-1">
           LogIn
         </Link>
-        <Link className="outlined-btn-link px-4 py-1" href="signup">
+        <Link className="outlined-btn-link px-4 py-1" href="/register">
           SignUp
         </Link>
       </div>

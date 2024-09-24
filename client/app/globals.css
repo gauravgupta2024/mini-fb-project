@@ -66,8 +66,12 @@
 }
 
 .colored-btn-link {
-  @apply bg-slate-900 text-[0.9rem] rounded-md border-black border-2 hover:bg-slate-800 duration-300 text-white hover:shadow-md;
+  @apply font-medium bg-slate-900 text-[0.9rem] rounded-md border-black border-2 hover:bg-slate-800 duration-300 text-white hover:shadow-md;
 }
 .outlined-btn-link {
-  @apply bg-white text-[0.9rem] rounded-md border-black border-2 hover:bg-gray-100 duration-300 text-black hover:shadow-md;
+  @apply font-medium bg-white text-[0.9rem] rounded-md border-black border-2 hover:bg-gray-100 duration-300 text-black hover:shadow-md;
+}
+
+.auth-form > div {
+  @apply flex flex-col justify-start items-start w-full mt-5 font-medium;
 }

@@ -57,6 +57,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     }
 
-    response.status(customError.statusCode).json({ msg: customError.msg });
+    response
+      .status(customError.statusCode)
+      .json({ success: false, msg: customError.msg });
   }
 }
