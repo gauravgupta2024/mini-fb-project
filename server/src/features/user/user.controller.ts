@@ -45,6 +45,30 @@ export class UserController {
     res.status(StatusCodes.OK).json({ success: true, user });
   }
 
+  @Get('/friends')
+  @UseGuards(AuthGuard)
+  async getAllFriends_Controller(
+    @Req() req: ReqUserObjType,
+    @Res() res: Response,
+  ): Promise<void> {
+    const user = await this.userModel.findById(req.user.id);
+
+    const friendsArray = user.friends; // all posts id created by user
+
+    // fetch all posts data
+    const userFriends = await this.userModel
+      .find({
+        _id: { $in: friendsArray },
+      })
+      .exec();
+
+    res.json({
+      success: true,
+      nbHits: friendsArray.length,
+      friends: userFriends,
+    });
+  }
+
   @Put('/update')
   @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('avatarFile'))

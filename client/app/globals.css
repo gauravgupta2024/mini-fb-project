@@ -75,3 +75,7 @@
 .auth-form > div {
   @apply flex flex-col justify-start items-start w-full mt-5 font-medium;
 }
+
+.post-info-block > button {
+  @apply flex flex-col justify-center items-center px-3 py-2 text-[0.9rem] font-medium w-[5rem] duration-200;
+}

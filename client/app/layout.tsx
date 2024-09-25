@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ReduxProvider } from "@/redux/Provider";
+import { AuthProvider } from "@/Utils/Auth";
 
 export default function RootLayout({
   children,
@@ -28,9 +29,11 @@ export default function RootLayout({
             pauseOnHover
             theme="dark"
           />
-          <NavBar />
-          <main className="w-full">{children}</main>
-          <Footer />
+          <AuthProvider>
+            <NavBar />
+            <main className="w-full">{children}</main>
+            <Footer />
+          </AuthProvider>
         </ReduxProvider>
       </body>
     </html>

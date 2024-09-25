@@ -1,33 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputControl from "@/components/forms/InputControl";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useRegisterUserMutation } from "@/redux/services/AuthAPI";
+import { ToastCustomAPIError } from "@/Utils/ToastCustomAPIError";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/Utils/Auth";
 
 const RegisterPage = () => {
-  const [username, setUsername] = useState<string>("abcd");
-  const [email, setEmail] = useState<string>("abcd@gmail.com");
-  const [password, setPassword] = useState<string>("123456789");
+  const router = useRouter();
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
+
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const [RegisterUser] = useRegisterUserMutation();
 
   const HandleRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log({ username, email, password });
     const { data, error } = await RegisterUser({ username, email, password });
 
     console.log({ data, error });
 
     if (data?.success) {
-      toast.success(data.msg || "registerd successfully !!");
+      setIsAuthenticated(true);
+      toast.success(data.msg || "Register successfully.");
+      router.push("/account");
     }
-
-    // console.log({ data });
+    if (error) {
+      ToastCustomAPIError(error);
+    }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/account");
+    }
+  }, [isAuthenticated, router]);
 
   return (
     <div className="w-full flex justify-between items-center h-screen">

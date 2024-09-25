@@ -2,18 +2,45 @@
 
 import InputControl from "@/components/forms/InputControl";
 import { Button } from "@/components/ui/button";
+import { useLoginUserMutation } from "@/redux/services/AuthAPI";
+import { useAuth } from "@/Utils/Auth";
+import { ToastCustomAPIError } from "@/Utils/ToastCustomAPIError";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
+  const router = useRouter();
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const HandleLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [LoginUser] = useLoginUserMutation();
+
+  const HandleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log({ email, password });
+    const { data, error } = await LoginUser({ email, password });
+
+    console.log({ data, error });
+
+    if (data?.success) {
+      setIsAuthenticated(true);
+      toast.success(data.msg || "Register successfully.");
+      router.push("/account");
+    }
+    if (error) {
+      ToastCustomAPIError(error);
+    }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/account");
+    }
+  }, [isAuthenticated, router]);
 
   return (
     <div className="w-full flex justify-between items-center h-screen">
