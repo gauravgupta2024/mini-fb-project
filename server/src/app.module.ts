@@ -5,7 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './features/auth/auth.module';
 import { UserModule } from './features/user/user.module';
 import { PostdataModule } from './features/postdata/postdata.module';
-import * as mongoose from 'mongoose';
+import { CommentsModule } from './features/comments/comments.module';
+import { SearchModule } from './features/search/search.module';
 
 @Module({
   imports: [
@@ -21,11 +22,6 @@ import * as mongoose from 'mongoose';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         const uri = configService.get<string>('MONGO_URI');
-        mongoose.connection.on('connected', () => console.log('DB connected.'));
-        mongoose.connection.on('error', (err) =>
-          console.log('DB connection error !!', err),
-        );
-
         return { uri };
       },
     }),
@@ -37,6 +33,10 @@ import * as mongoose from 'mongoose';
     UserModule,
 
     PostdataModule,
+
+    CommentsModule,
+
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [],

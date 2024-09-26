@@ -1,7 +1,11 @@
 import {
   Controller,
+  Delete,
+  Get,
   Param,
   Post,
+  Put,
+  Query,
   Req,
   Res,
   UploadedFiles,
@@ -16,7 +20,10 @@ import { AuthGuard } from 'src/gaurds/AuthGaurd';
 import { PostData } from 'src/schemas/post.schema';
 import { PostDataDocumentType, UserDocumentType } from 'src/types/schemas';
 import { PostdataService } from './postdata.service';
-import { PostDataObjType } from 'src/types/featuresTypes/post';
+import {
+  PostDataObjType,
+  UpdatePostDataObjType,
+} from 'src/types/featuresTypes/post';
 import { ReqUserObjType } from 'src/types/global';
 import { User } from 'src/schemas/user.schema';
 import { CustomAPIError } from 'src/errors/customAPIError';
@@ -54,7 +61,7 @@ export class PostdataController {
     @Res() res: Response,
     @UploadedFiles() postUploads: Array<Express.Multer.File>,
   ) {
-    const { textCaption } = req.body;
+    const { postCaption } = req.body;
 
     if (postUploads === undefined || postUploads?.length == 0) {
       await this.postDataServices.DeleteUploads(postUploads);
@@ -69,7 +76,7 @@ export class PostdataController {
       req,
       res,
       'images',
-      textCaption,
+      postCaption,
       postUploads,
     );
   }
@@ -97,7 +104,7 @@ export class PostdataController {
   ) {
     console.log({ postUploads });
 
-    const { textCaption } = req.body;
+    const { postCaption } = req.body;
 
     if (postUploads === undefined || postUploads?.length == 0) {
       await this.postDataServices.DeleteUploads(postUploads);
@@ -112,7 +119,7 @@ export class PostdataController {
       req,
       res,
       'videos',
-      textCaption,
+      postCaption,
       postUploads,
     );
   }
@@ -121,11 +128,11 @@ export class PostdataController {
   @Post('/text')
   @UseGuards(AuthGuard)
   async createPostText(@Req() req: ReqUserObjType, @Res() res: Response) {
-    const { textCaption } = req.body;
+    const { postCaption } = req.body;
 
     const postData: PostDataObjType = {
       contentType: 'text',
-      textCaption,
+      postCaption,
     };
 
     const post = await this.PostDataModel.create(postData);
@@ -138,7 +145,7 @@ export class PostdataController {
   }
 
   //---------------------delete post---------------------
-  @Post('/:postId')
+  @Delete('/:postId')
   @UseGuards(AuthGuard)
   async deletePost(
     @Req() req: ReqUserObjType,
@@ -148,7 +155,9 @@ export class PostdataController {
     const post = await this.PostDataModel.findById(postId);
     const user = await this.UserModel.findById(req.user.id);
 
-    const postIndex = user.posts.findIndex(post.id);
+    const postIndex = user.posts.findIndex(
+      (singlePostId) => singlePostId === post.id,
+    );
 
     if (postIndex === -1) {
       throw new CustomAPIError(
@@ -160,9 +169,81 @@ export class PostdataController {
     user.posts.splice(postIndex, 1);
     await user.save();
 
-    post.isDeleted = true;
-    await post.save();
+    // post.isDeleted = true;
+    // await post.save();
+    // console.log({ post });
+
+    await this.postDataServices.DeleteDBUploads(post.postDataUploads);
 
     res.json({ success: true, msg: 'Post deleted successfully !', post });
+  }
+
+  //---------------------update post---------------------
+  @Put('/:postId')
+  @UseGuards(AuthGuard)
+  async updatePost(
+    @Req() req: ReqUserObjType,
+    @Res() res: Response,
+    @Param('postId') postId: string,
+  ) {
+    const user = await this.UserModel.findById(req.user.id);
+    let post = await this.PostDataModel.findById(postId);
+    if (!post) {
+      throw new CustomAPIError('Post Not Found !!', StatusCodes.BAD_REQUEST);
+    }
+
+    const postIndex = user.posts.findIndex(
+      (singlePostId) => singlePostId === post.id,
+    );
+
+    if (postIndex === -1) {
+      throw new CustomAPIError(
+        'This post does not exists in user account !!',
+        StatusCodes.UNAUTHORIZED,
+      );
+    }
+
+    const { postCaption }: UpdatePostDataObjType = req.body;
+
+    post = await this.PostDataModel.findByIdAndUpdate(
+      postId,
+      { postCaption },
+      { runValidators: true, new: true },
+    );
+
+    res.json({ success: true, msg: 'Post updated successfully !', post });
+  }
+
+  //---------------------Get All User posts---------------------
+  @Get('/me')
+  @UseGuards(AuthGuard)
+  async GetAllUserPosts(@Req() req: ReqUserObjType, @Res() res: Response) {
+    const user = await this.UserModel.findById(req.user.id);
+
+    const postsArray = user.posts; // all posts id created by user
+
+    // fetch all posts data
+    const userPosts = await this.PostDataModel.find({
+      _id: { $in: postsArray },
+    }).exec();
+
+    res.json({ success: true, nbHits: userPosts.length, posts: userPosts });
+  }
+
+  //---------------------Get All User posts---------------------
+  @Get('/:postId')
+  @UseGuards(AuthGuard)
+  async GetSinglePost(
+    @Req() req: ReqUserObjType,
+    @Res() res: Response,
+    @Param('postId') postId: string,
+  ) {
+    const post = await this.PostDataModel.findById(postId);
+
+    if (!post) {
+      throw new CustomAPIError('Post not found !!', StatusCodes.BAD_REQUEST);
+    }
+
+    res.json({ success: true, post });
   }
 }

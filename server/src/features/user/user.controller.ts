@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Param,
   Put,
   Req,
   Res,
@@ -44,6 +45,30 @@ export class UserController {
     res.status(StatusCodes.OK).json({ success: true, user });
   }
 
+  @Get('/friends')
+  @UseGuards(AuthGuard)
+  async getAllFriends_Controller(
+    @Req() req: ReqUserObjType,
+    @Res() res: Response,
+  ): Promise<void> {
+    const user = await this.userModel.findById(req.user.id);
+
+    const friendsArray = user.friends; // all posts id created by user
+
+    // fetch all posts data
+    const userFriends = await this.userModel
+      .find({
+        _id: { $in: friendsArray },
+      })
+      .exec();
+
+    res.json({
+      success: true,
+      nbHits: friendsArray.length,
+      friends: userFriends,
+    });
+  }
+
   @Put('/update')
   @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('avatarFile'))
@@ -78,5 +103,86 @@ export class UserController {
     res
       .status(StatusCodes.OK)
       .json({ success: true, msg: 'user updated successfully.', user });
+  }
+
+  @Put('/friend/add/:friendId')
+  @UseGuards(AuthGuard)
+  async addFriend(
+    @Req() req: ReqUserObjType,
+    @Res() res: Response,
+    @Param('friendId') friendId: string,
+  ) {
+    const friend = await this.userModel.findById(friendId);
+
+    if (!friend) {
+      throw new CustomAPIError(
+        'Please provide valid id of friend.',
+        StatusCodes.BAD_REQUEST,
+      );
+    }
+
+    const user = await this.userModel.findById(req.user.id);
+
+    let index = user.friends.findIndex((item) => item === friend.id);
+
+    if (index !== -1) {
+      throw new CustomAPIError(
+        'Friend is already added.',
+        StatusCodes.BAD_REQUEST,
+      );
+    }
+
+    user.friends.push(friend.id);
+    friend.friends.push(user.id);
+    await user.save();
+    await friend.save();
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      msg: `${friend.username} is added to your friends list.`,
+      user,
+    });
+  }
+
+  @Put('/friend/remove/:friendId')
+  @UseGuards(AuthGuard)
+  async removeFriend(
+    @Req() req: ReqUserObjType,
+    @Res() res: Response,
+    @Param('friendId') friendId: string,
+  ) {
+    const friend = await this.userModel.findById(friendId);
+
+    if (!friend) {
+      throw new CustomAPIError(
+        'Please provide valid id of friend.',
+        StatusCodes.BAD_REQUEST,
+      );
+    }
+
+    const user = await this.userModel.findById(req.user.id);
+
+    let index = user.friends.findIndex((item) => item === friend.id);
+
+    if (index === -1) {
+      throw new CustomAPIError(
+        'No friend with this id exists in your friends list.',
+        StatusCodes.BAD_REQUEST,
+      );
+    }
+
+    user.friends.splice(index, 1);
+
+    index = friend.friends.findIndex((item) => item === user.id);
+    friend.friends.splice(index, 1);
+
+    await user.save();
+    await friend.save();
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      msg: `${friend.username} is removed to your friends list.`,
+      user,
+    });
   }
 }

@@ -4,6 +4,7 @@ import * as validator from 'validator';
 import * as bcrypt from 'bcryptjs';
 import * as JWT from 'jsonwebtoken';
 import { Avatar, AvatarSchema } from './avatar.schema';
+import { Comments, CommentsSchema } from './comments.schema';
 
 @Schema({ timestamps: true })
 export class User extends Document {
@@ -35,6 +36,12 @@ export class User extends Document {
 
   @Prop({ type: [mongoose.Types.ObjectId], ref: 'posts' })
   posts: mongoose.Types.ObjectId[];
+
+  @Prop({ type: [mongoose.Types.ObjectId] })
+  comments_added: mongoose.Types.ObjectId[];
+
+  @Prop({ type: [mongoose.Types.ObjectId] })
+  friends: mongoose.Types.ObjectId[];
 
   //-------------------- mongoose methods --------------------
 
