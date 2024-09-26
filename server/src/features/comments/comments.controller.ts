@@ -173,10 +173,20 @@ export class CommentsController {
       _id: { $in: post.comments },
     });
 
+    const commentsWithUserDetails = await Promise.all(
+      comments.map(async (comment) => {
+        const user = await this.UserModel.findById(comment.user_id);
+        return {
+          comment,
+          user,
+        };
+      }),
+    );
+
     res.status(StatusCodes.OK).json({
       success: true,
       nbHits: comments.length,
-      comments,
+      comments: commentsWithUserDetails,
     });
   }
 }

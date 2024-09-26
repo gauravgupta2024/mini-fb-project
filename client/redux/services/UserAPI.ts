@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type {
   GetAllFriendsResponseType,
   GetAllPostsResponseType,
+  PostType,
   UserResponseType,
 } from "./types-service";
 import { BASE_URL } from "./BASE_URL";
@@ -20,6 +21,12 @@ export const UserAPI = createApi({
     getUserFriends: builder.query<GetAllFriendsResponseType, void>({
       query: () => "/me/friends",
     }),
+    getUniversalFeed: builder.query<
+      { success: boolean; feed: PostType[] },
+      void
+    >({
+      query: () => "/search/feed",
+    }),
   }),
 });
 
@@ -29,4 +36,5 @@ export const {
   useLoadUserQuery,
   useGetUserPostsQuery,
   useGetUserFriendsQuery,
+  useGetUniversalFeedQuery,
 } = UserAPI;

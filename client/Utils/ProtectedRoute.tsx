@@ -16,7 +16,7 @@ export default function ProtectedRoute({
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.push("/login");
+      router.push("/feed");
       //   toast.error("Please login to access this page");
     }
   }, [isAuthenticated, router]);

@@ -68,7 +68,9 @@ export class SearchController {
   //---------------------get universal feed---------------------
   @Get('/feed')
   async GetUniversalFeed(@Req() req: Request, @Res() res: Response) {
-    const feed = this.PostDataModel.find().sort({ createdAt: -1 }).limit(10);
+    const feed = await this.PostDataModel.find()
+      .sort({ createdAt: -1 })
+      .limit(10);
 
     res.status(StatusCodes.OK).json({ success: true, feed });
   }

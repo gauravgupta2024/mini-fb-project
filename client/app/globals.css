@@ -79,3 +79,23 @@
 .post-info-block > button {
   @apply flex flex-col justify-center items-center px-3 py-2 text-[0.9rem] font-medium w-[5rem] duration-200;
 }
+
+.post-info-container > p {
+  @apply flex justify-center items-center  mr-5;
+}
+.post-info-container > p > span {
+  @apply text-[0.8rem] ml-1;
+}
+.post-counts-container > p {
+  @apply flex justify-start items-center font-medium text-[1.1rem] mr-3;
+}
+.post-counts-container > p > span {
+  @apply ml-1 text-[0.8rem];
+}
+
+.file-upload-block {
+  @apply w-[80%] h-[30vh] text-[0.8rem] font-medium bg-gray-100 border-2 border-dashed border-black rounded-md flex flex-col justify-center items-center cursor-pointer;
+}
+.sidebar-list-item {
+  @apply text-[0.9rem] bg-blue-100  border-b border-blue-700 font-medium cursor-pointer hover:bg-blue-200 duration-200 py-3 px-3 w-full list-none flex justify-start items-center shadow-md;
+}

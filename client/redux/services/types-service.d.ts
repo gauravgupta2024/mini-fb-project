@@ -83,6 +83,8 @@ export interface PostType {
   contentType: string;
   postDataUploads: PostDataUploadObjType[];
   comments: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 export interface PostDataUploadObjType {
   public_id: string;
@@ -90,6 +92,27 @@ export interface PostDataUploadObjType {
 }
 
 export interface CommentType {
+  _id: string;
   user_id: string;
   comment_text: string;
+}
+
+export interface GetPostCommentsResponseType {
+  success: boolean;
+  nbHits: number;
+  comments: {
+    comment: CommentType;
+    user: UserType;
+  }[];
+}
+
+export interface AddCommentRequestType {
+  postId: string;
+  comment_text: string;
+}
+
+export interface AddCommentResponseType {
+  success: boolean;
+  msg: string;
+  comment: CommentType;
 }

@@ -10,6 +10,13 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { BASE_URL } from "@/redux/services/BASE_URL";
 import { toast } from "react-toastify";
+import { UserType } from "@/redux/services/types-service";
+import {
+  TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+} from "../ui/tooltip";
 
 const font = League_Spartan({
   subsets: ["latin"],
@@ -38,7 +45,7 @@ const NavBar = () => {
   };
 
   return (
-    <header className="flex justify-between items-center w-full p-2 px-8 shadow-md">
+    <header className="flex justify-between items-center w-full p-2 px-8 shadow-lg">
       <div className="logo-container">
         <Link href="/" className={`${font.className} font-medium text-lg`}>
           FB-Mini
@@ -51,20 +58,7 @@ const NavBar = () => {
             Logout
           </Button>
 
-          <Link href="/account" className="block">
-            <Avatar>
-              <AvatarImage
-                src={
-                  user?.avatar.url === "sample url"
-                    ? "/default_avatar.png"
-                    : user?.avatar.url
-                }
-              />
-              <AvatarFallback>
-                {user?.username.substring(0, 2).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-          </Link>
+          <NavAvatarLink user={user} />
         </div>
       ) : (
         <div className="nav-links-container flex justify-end items-center w-[30%]">
@@ -81,3 +75,33 @@ const NavBar = () => {
 };
 
 export default NavBar;
+
+const NavAvatarLink = ({ user }: { user: UserType | undefined }) => {
+  return (
+    <Link href="/account" className="block">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <Avatar>
+              <AvatarImage
+                src={
+                  user?.avatar.url === "sample url"
+                    ? "/default_avatar.png"
+                    : user?.avatar.url
+                }
+              />
+              <AvatarFallback>
+                {user?.username.substring(0, 2).toUpperCase() || "Account"}
+              </AvatarFallback>
+            </Avatar>
+          </TooltipTrigger>
+          <TooltipContent>
+            {user?.username && user?.username.length > 6
+              ? `${user?.username.substring(0, 6)}...`
+              : user?.username || "Account"}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </Link>
+  );
+};
